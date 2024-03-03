@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using TmpApi.Services;
+using TmpApi.Utilities;
 
 namespace TmpApi.Controllers;
 [ApiController]
@@ -19,11 +21,8 @@ public class HomeController : ControllerBase
     public async Task<ActionResult<HomeDetail>> Create([FromBody] HomeCreate model)
     {
         var result = await _homeService.Create(model);
-
-        foreach (var item in result.Errors)
-        {
-            ModelState.AddModelError(item.Key, item.Value);
-        }
+        
+        ModelState.AddAllErrors(result);
 
         if (!result.Success)
         {
